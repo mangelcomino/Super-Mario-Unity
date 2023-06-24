@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 192398773}
   - component: {fileID: 192398772}
   - component: {fileID: 192398771}
+  - component: {fileID: 192398774}
   m_Layer: 7
   m_Name: Ground
   m_TagString: Untagged
@@ -234,6 +235,21 @@ Transform:
   m_Father: {fileID: 246806874}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &192398774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 192398770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180067568730de44092e83b4eae2852c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 7
 --- !u!1 &216489279
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,8 +402,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.01512599, y: 0.5}
-  m_Size: {x: 0.63092375, y: 1}
+  m_Offset: {x: 0.006141901, y: 0.5}
+  m_Size: {x: 0.59858084, y: 1}
   m_Direction: 0
 --- !u!50 &957770393
 Rigidbody2D:
@@ -423,7 +439,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0033605099, y: 0.08526635}
+  m_Offset: {x: -0.0033605099, y: 0.07837939}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -434,7 +450,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.3457265, y: 0.1705327}
+  m_Size: {x: 0.3457265, y: 0.1383934}
   m_EdgeRadius: 0
 --- !u!212 &957770395
 SpriteRenderer:
@@ -496,7 +512,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 957770391}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.7064724, y: -1.555627, z: 0}
+  m_LocalPosition: {x: -5.7064724, y: -1.574, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -539,11 +555,11 @@ MonoBehaviour:
   speedX: 5
   JumpForce: 900
   isGrounded: 0
-  FloorLayer:
-    serializedVersion: 2
-    m_Bits: 0
   moveX: 0
   State: 0
+  WallCollission: 0
+  ReadyToFall: 0
+  RaycastDistance: 0.01
 --- !u!1 &1083981726
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +571,7 @@ GameObject:
   - component: {fileID: 1083981727}
   - component: {fileID: 1083981729}
   - component: {fileID: 1083981728}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Brick
   m_TagString: Untagged
   m_Icon: {fileID: 0}

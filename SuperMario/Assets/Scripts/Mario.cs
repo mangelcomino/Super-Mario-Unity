@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Burst.CompilerServices;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
@@ -14,9 +15,11 @@ public class Mario : MonoBehaviour
     public float speedX = 5f;
     public float JumpForce = 5f;
     public bool isGrounded=false;
-    public LayerMask FloorLayer;
     public float moveX;
     public ePlayerState State=ePlayerState.Idle;
+    public bool WallCollission=false;
+    public bool ReadyToFall=false;
+    public float RaycastDistance = 1f;
 
     private void Awake()
     {
@@ -24,6 +27,7 @@ public class Mario : MonoBehaviour
         mAnimator = GetComponent<Animator>();
         mSpriteRenderer = GetComponent<SpriteRenderer>();
         mBoxCollider = GetComponent<BoxCollider2D>();
+
        
     }
     // Start is called before the first frame update
@@ -34,7 +38,7 @@ public class Mario : MonoBehaviour
 
     private void CheckGround()
     {
-        Vector2 groundCheckPosition = (Vector2) this.transform.position + this.mBoxCollider.offset;
+        Vector2 groundCheckPosition = (Vector2) this.transform.position  + this.mBoxCollider.offset;
         Collider2D[] colliders = Physics2D.OverlapBoxAll(groundCheckPosition, this.mBoxCollider.size, 0f);
         isGrounded = false;
         foreach (var coll in colliders) 
@@ -42,6 +46,7 @@ public class Mario : MonoBehaviour
             if (coll.tag == ("Player"))
                 continue;
             isGrounded=true;
+            WallCollission = false;
             break;
         }
         
@@ -51,7 +56,7 @@ public class Mario : MonoBehaviour
     private void CheckInput()
     {
         moveX = Input.GetAxis("Horizontal");
-        if (moveX != 0f)
+        if (moveX != 0f && !WallCollission && !ReadyToFall)
             Run(moveX);
         else Stop();
 
@@ -102,11 +107,44 @@ public class Mario : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        ContactPoint2D[] contacts = collision.contacts;
+        foreach (ContactPoint2D contact in contacts)
+        {
+            Vector2 contactNormal = contact.normal;
+            if (contactNormal == Vector2.left)
+            {
+                Debug.Log("colision izquierda");
+                WallCollission=true;
+            }
+            if (contactNormal == Vector2.right)
+            {
+                Debug.Log("colision derecha");
+                WallCollission = true;
+            }
+
+        }
+    }
+
+    private void CheckFallToGround()
+    {
+        RaycastHit2D hitright = Physics2D.Raycast(transform.position + new Vector3(mSpriteRenderer.size.x / 2, 0, 0), Vector2.down, RaycastDistance);
+        RaycastHit2D hitleft = Physics2D.Raycast(transform.position - new Vector3(mSpriteRenderer.size.x / 2, 0, 0), Vector2.down, RaycastDistance);
+        if (hitleft.collider == null && hitright.collider==null)
+            ReadyToFall = true;
+        else
+            ReadyToFall = false;
+
+        Debug.DrawLine(transform.position + new Vector3(mSpriteRenderer.size.x / 2, 0, 0), hitright.point, Color.red);
+        Debug.DrawLine(transform.position - new Vector3(mSpriteRenderer.size.x / 2, 0, 0), hitleft.point, Color.red);
+    }
 
     // Update is called once per frame
     void Update()
     {
         CheckGround();
+        CheckFallToGround();
         CheckInput();
         CheckState();
         //isGrounded=Physics2D.OverlapCircle()
